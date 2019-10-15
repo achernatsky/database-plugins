@@ -89,7 +89,7 @@ public class TeradataSourceTestRun extends TeradataPluginTestBase {
     String importQuery = "SELECT " +
       "ID, " +
       "NAME, " +
-//      "SCORE, " +
+      "SCORE, " +
       "DATE_COL, " +
       "GRADUATED, " +
       "CHAR_COL, " +
@@ -148,8 +148,8 @@ public class TeradataSourceTestRun extends TeradataPluginTestBase {
     // Verify numeric columns
     Assert.assertEquals(0, (int) row1.get("GRADUATED"));
     Assert.assertEquals(1, (int) row2.get("GRADUATED"));
-//    Assert.assertEquals(124.45, row1.get("SCORE"), 0.000001);
-//    Assert.assertEquals(125.45, row2.get("SCORE"), 0.000001);
+    Assert.assertEquals(124.45, row1.get("SCORE"), 0.000001);
+    Assert.assertEquals(125.45, row2.get("SCORE"), 0.000001);
     Assert.assertEquals(1, (int) row1.get("ID"));
     Assert.assertEquals(2, (int) row2.get("ID"));
     Assert.assertEquals(1, (int) row1.get("SMALL"));

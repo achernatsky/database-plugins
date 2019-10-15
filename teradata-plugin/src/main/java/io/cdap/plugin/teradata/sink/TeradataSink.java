@@ -19,9 +19,15 @@ package io.cdap.plugin.teradata.sink;
 import io.cdap.cdap.api.annotation.Description;
 import io.cdap.cdap.api.annotation.Name;
 import io.cdap.cdap.api.annotation.Plugin;
+import io.cdap.cdap.api.data.format.StructuredRecord;
 import io.cdap.cdap.etl.api.batch.BatchSink;
+import io.cdap.plugin.db.DBRecord;
+import io.cdap.plugin.db.SchemaReader;
 import io.cdap.plugin.db.batch.sink.AbstractDBSink;
+import io.cdap.plugin.db.batch.sink.FieldsValidator;
 import io.cdap.plugin.teradata.TeradataConstants;
+import io.cdap.plugin.teradata.TeradataDBRecord;
+import io.cdap.plugin.teradata.TeradataSchemaReader;
 
 /**
  * Sink support for a Teradata database.
@@ -35,5 +41,20 @@ public class TeradataSink  extends AbstractDBSink {
   public TeradataSink(TeradataSinkConfig config) {
     super(config);
     this.config = config;
+  }
+
+  @Override
+  protected SchemaReader getSchemaReader() {
+    return new TeradataSchemaReader();
+  }
+
+  @Override
+  protected FieldsValidator getFieldsValidator() {
+    return new TeradataFieldsValidator();
+  }
+
+  @Override
+  protected DBRecord getDBRecord(StructuredRecord output) {
+    return new TeradataDBRecord(output, columnTypes);
   }
 }

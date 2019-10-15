@@ -98,7 +98,7 @@ public abstract class TeradataPluginTestBase extends DatabasePluginTestBase {
 
     addPluginArtifact(NamespaceId.DEFAULT.artifact(JDBC_DRIVER_NAME, "1.0.0"),
                       DATAPIPELINE_ARTIFACT_ID,
-                      TeradataSource.class, TeradataSink.class, DBRecord.class, ETLDBOutputFormat.class,
+                      TeradataSource.class, TeradataSink.class, TeradataDBRecord.class, ETLDBOutputFormat.class,
                       DataDrivenETLDBInputFormat.class, DBRecord.class, TeradataAction.class, TeradataPostAction.class);
 
     Class<?> driverClass = Class.forName(DRIVER_CLASS);

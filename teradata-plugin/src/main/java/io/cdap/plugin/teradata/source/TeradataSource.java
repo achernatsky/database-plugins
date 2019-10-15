@@ -20,8 +20,12 @@ import io.cdap.cdap.api.annotation.Description;
 import io.cdap.cdap.api.annotation.Name;
 import io.cdap.cdap.api.annotation.Plugin;
 import io.cdap.cdap.etl.api.batch.BatchSource;
+import io.cdap.plugin.db.SchemaReader;
 import io.cdap.plugin.db.batch.source.AbstractDBSource;
 import io.cdap.plugin.teradata.TeradataConstants;
+import io.cdap.plugin.teradata.TeradataDBRecord;
+import io.cdap.plugin.teradata.TeradataSchemaReader;
+import org.apache.hadoop.mapreduce.lib.db.DBWritable;
 
 /**
  * Batch source to read from Teradata.
@@ -39,7 +43,17 @@ public class TeradataSource extends AbstractDBSource {
   }
 
   @Override
+  protected Class<? extends DBWritable> getDBRecordType() {
+    return TeradataDBRecord.class;
+  }
+
+  @Override
   protected String createConnectionString() {
     return config.getConnectionString();
+  }
+
+  @Override
+  protected SchemaReader getSchemaReader() {
+    return new TeradataSchemaReader();
   }
 }
