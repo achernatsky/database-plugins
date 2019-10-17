@@ -35,6 +35,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -50,11 +53,11 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
     Schema.Field.of("ID", Schema.of(Schema.Type.INT)),
     Schema.Field.of("NAME", Schema.of(Schema.Type.STRING)),
     Schema.Field.of("SCORE", Schema.of(Schema.Type.DOUBLE)),
-//    Schema.Field.of("GRADUATED", Schema.of(Schema.Type.BOOLEAN)),
+    Schema.Field.of("GRADUATED", Schema.of(Schema.Type.INT)),
     Schema.Field.of("SMALL", Schema.of(Schema.Type.INT)),
     Schema.Field.of("BIG", Schema.of(Schema.Type.LONG)),
-//    Schema.Field.of("NUMBER_COL", Schema.decimalOf(PRECISION, SCALE)),
-//    Schema.Field.of("DECIMAL_COL", Schema.decimalOf(PRECISION, SCALE)),
+    Schema.Field.of("NUMBER_COL", Schema.decimalOf(PRECISION, SCALE)),
+    Schema.Field.of("DECIMAL_COL", Schema.decimalOf(PRECISION, SCALE)),
     Schema.Field.of("DATE_COL", Schema.of(Schema.LogicalType.DATE)),
     Schema.Field.of("TIME_COL", Schema.of(Schema.LogicalType.TIME_MICROS)),
     Schema.Field.of("TIMESTAMP_COL", Schema.of(Schema.LogicalType.TIMESTAMP_MICROS)),
@@ -134,16 +137,16 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
         CustomAssertions.assertObjectEquals(expected.get("NAME"), actual.getString("NAME"));
         CustomAssertions.assertObjectEquals(expected.get("CHAR_COL"), actual.getString("CHAR_COL").trim());
         CustomAssertions.assertObjectEquals(expected.get("VARCHAR_COL"), actual.getString("VARCHAR_COL").trim());
-//        CustomAssertions.assertObjectEquals(expected.get("GRADUATED"), actual.getBoolean("GRADUATED"));
+        CustomAssertions.assertObjectEquals(expected.get("GRADUATED"), actual.getInt("GRADUATED"));
         Assert.assertNull(actual.getString("NOT_IMPORTED"));
 //        CustomAssertions.assertObjectEquals(expected.get("ENUM_COL"), actual.getString("ENUM_COL"));
 //        CustomAssertions.assertObjectEquals(expected.get("SET_COL"), actual.getString("SET_COL"));
         CustomAssertions.assertObjectEquals(expected.get("SMALL"), actual.getInt("SMALL"));
         CustomAssertions.assertObjectEquals(expected.get("BIG"), actual.getLong("BIG"));
         CustomAssertions.assertNumericEquals(expected.get("SCORE"), actual.getDouble("SCORE"));
-//        CustomAssertions.assertObjectEquals(expected.getDecimal("NUMBER_COL"), actual.getBigDecimal("NUMBER_COL"));
-//        CustomAssertions.assertObjectEquals(expected.getDecimal("DECIMAL_COL"), actual.getBigDecimal("DECIMAL_COL"));
-//
+        CustomAssertions.assertObjectEquals(expected.getDecimal("NUMBER_COL"), actual.getBigDecimal("NUMBER_COL").setScale(SCALE,  RoundingMode.HALF_EVEN));
+        CustomAssertions.assertObjectEquals(expected.getDecimal("DECIMAL_COL"), actual.getBigDecimal("DECIMAL_COL"));
+
 //        // Verify binary columns
         Assert.assertArrayEquals(expected.get("BINARY_COL"), actual.getBytes("BINARY_COL"));
         Assert.assertArrayEquals(expected.get("VARBINARY_COL"), actual.getBytes("VARBINARY_COL"));
@@ -170,11 +173,11 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
         .set("ID", i)
         .set("NAME", name)
         .set("SCORE", 3.451)
-//        .set("GRADUATED", (i % 2 == 0))
+        .set("GRADUATED", (i % 2 == 0) ? 1 : 0)
         .set("SMALL", i)
         .set("BIG", 3456987L)
-//        .setDecimal("NUMERIC_COL", new BigDecimal(3.458d, new MathContext(PRECISION)).setScale(SCALE))
-//        .setDecimal("DECIMAL_COL", new BigDecimal(3.459d, new MathContext(PRECISION)).setScale(SCALE))
+        .setDecimal("NUMBER_COL", new BigDecimal(3.458d, new MathContext(PRECISION)).setScale(SCALE))
+        .setDecimal("DECIMAL_COL", new BigDecimal(3.459d, new MathContext(PRECISION)).setScale(SCALE))
         .setDate("DATE_COL", localDateTime.toLocalDate())
         .setTime("TIME_COL", localDateTime.toLocalTime())
         .setTimestamp("TIMESTAMP_COL", localDateTime.atZone(UTC_ZONE))

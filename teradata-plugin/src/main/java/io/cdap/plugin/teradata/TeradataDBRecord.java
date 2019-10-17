@@ -18,13 +18,18 @@ package io.cdap.plugin.teradata;
 
 import io.cdap.cdap.api.common.Bytes;
 import io.cdap.cdap.api.data.format.StructuredRecord;
+import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.plugin.db.ColumnType;
 import io.cdap.plugin.db.DBRecord;
 import io.cdap.plugin.db.SchemaReader;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 /**
@@ -49,6 +54,11 @@ public class TeradataDBRecord extends DBRecord {
   }
 
   @Override
+  protected SchemaReader getSchemaReader() {
+    return new TeradataSchemaReader();
+  }
+
+  @Override
   protected void writeBytes(PreparedStatement stmt, int fieldIndex, int sqlIndex, Object fieldValue)
     throws SQLException {
     byte[] byteValue = fieldValue instanceof ByteBuffer ? Bytes.toBytes((ByteBuffer) fieldValue) : (byte[]) fieldValue;
@@ -57,7 +67,14 @@ public class TeradataDBRecord extends DBRecord {
   }
 
   @Override
-  protected SchemaReader getSchemaReader() {
-    return new TeradataSchemaReader();
+  protected void setField(ResultSet resultSet, StructuredRecord.Builder recordBuilder, Schema.Field field,
+                          int columnIndex, int sqlType, int sqlPrecision, int sqlScale) throws SQLException {
+    Object original = resultSet.getObject(columnIndex);
+    if (original != null && sqlType == Types.NUMERIC) {
+      BigDecimal decimal = (BigDecimal) original;
+      recordBuilder.setDecimal(field.getName(), decimal.setScale(sqlScale, RoundingMode.HALF_EVEN));
+    } else {
+      super.setField(resultSet, recordBuilder, field, columnIndex, sqlType, sqlPrecision, sqlScale);
+    }
   }
 }

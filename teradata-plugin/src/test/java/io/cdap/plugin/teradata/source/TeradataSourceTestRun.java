@@ -39,6 +39,8 @@ import io.cdap.plugin.teradata.TeradataPluginTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.nio.ByteBuffer;
 import java.sql.Date;
 import java.sql.Time;
@@ -100,8 +102,8 @@ public class TeradataSourceTestRun extends TeradataPluginTestBase {
       "BLOB_COL, " +
       "SMALL, " +
       "BIG, " +
-//      "DECIMAL_COL, " +
-//      "NUMBER_COL, " +
+      "DECIMAL_COL, " +
+      "NUMBER_COL, " +
       "TIME_COL, " +
       "TIMESTAMP_COL " +
       "FROM my_table WHERE ID < 3 AND $CONDITIONS";
@@ -156,14 +158,14 @@ public class TeradataSourceTestRun extends TeradataPluginTestBase {
     Assert.assertEquals(2, (int) row2.get("SMALL"));
     Assert.assertEquals(1, (long) row1.get("BIG"));
     Assert.assertEquals(2, (long) row2.get("BIG"));
-//    Assert.assertEquals(new BigDecimal(124.45, new MathContext(PRECISION)).setScale(SCALE),
-//                        row1.getDecimal("DECIMAL_COL"));
-//    Assert.assertEquals(new BigDecimal(125.45, new MathContext(PRECISION)).setScale(SCALE),
-//                        row2.getDecimal("DECIMAL_COL"));
-//    Assert.assertEquals(new BigDecimal(55.65, new MathContext(PRECISION)).setScale(SCALE),
-//                        row1.getDecimal("NUMBER_COL"));
-//    Assert.assertEquals(new BigDecimal(56.65, new MathContext(PRECISION)).setScale(SCALE),
-//                        row2.getDecimal("NUMBER_COL"));
+    Assert.assertEquals(new BigDecimal(124.45, new MathContext(PRECISION)).setScale(SCALE),
+                        row1.getDecimal("DECIMAL_COL"));
+    Assert.assertEquals(new BigDecimal(125.45, new MathContext(PRECISION)).setScale(SCALE),
+                        row2.getDecimal("DECIMAL_COL"));
+    Assert.assertEquals(new BigDecimal(55.65, new MathContext(PRECISION)).setScale(SCALE),
+                        row1.getDecimal("NUMBER_COL"));
+    Assert.assertEquals(new BigDecimal(56.65, new MathContext(PRECISION)).setScale(SCALE),
+                        row2.getDecimal("NUMBER_COL"));
 
     // Verify time columns
     java.util.Date date = new java.util.Date(CURRENT_TS);
