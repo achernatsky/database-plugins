@@ -148,9 +148,22 @@ public abstract class TeradataPluginTestBase extends DatabasePluginTestBase {
         "DECIMAL_COL DECIMAL(" + PRECISION + "," + SCALE + "), " +
         "NUMBER_COL NUMBER(" + PRECISION + "," + SCALE + "), " +
         "TIME_COL TIME, " +
-        "TIMESTAMP_COL TIMESTAMP " +
-//        "TIMETZ_COL TIME With Time Zone, " +
-//        "TIMESTAMPTZ_COL TIMESTAMP WITH TIME ZONE, " +
+        "TIMESTAMP_COL TIMESTAMP, " +
+        "TIMETZ_COL TIME With Time Zone, " +
+        "TIMESTAMPTZ_COL TIMESTAMP WITH TIME ZONE, " +
+        "INTERVAL_YEAR_COL INTERVAL YEAR (4), " +
+        "INTERVAL_YEAR_TO_MONTH_COL INTERVAL YEAR(4) TO MONTH, " +
+        "INTERVAL_MONTH_COL INTERVAL MONTH(2), " +
+        "INTERVAL_DAY_COL INTERVAL DAY(2), " +
+        "INTERVAL_DAY_TO_HOUR_COL INTERVAL DAY(2) TO HOUR, " +
+        "INTERVAL_DAY_TO_MINUTE_COL INTERVAL DAY(2) TO MINUTE, " +
+        "INTERVAL_DAY_TO_SECOND_COL INTERVAL DAY(2) TO SECOND(3), " +
+        "INTERVAL_HOUR_COL INTERVAL HOUR(2), " +
+        "INTERVAL_HOUR_TO_MINUTE_COL INTERVAL HOUR(2) TO MINUTE, " +
+        "INTERVAL_HOUR_TO_SECOND_COL INTERVAL HOUR(2) TO SECOND(3), " +
+        "INTERVAL_MINUTE_COL INTERVAL MINUTE(2), " +
+        "INTERVAL_MINUTE_TO_SECOND_COL INTERVAL MINUTE(2) TO SECOND(3), " +
+        "INTERVAL_SECOND_COL INTERVAL SECOND(2,3) " +
         "";
       stmt.execute("CREATE TABLE my_table(" + columns + ")");
       stmt.execute("CREATE TABLE your_table(" + columns + ")");
@@ -165,8 +178,8 @@ public abstract class TeradataPluginTestBase extends DatabasePluginTestBase {
 
   protected static void prepareTestData(Connection conn) throws SQLException {
     String insertTemplate = "INSERT INTO %s VALUES(" +
-      "?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
-      "?, ?, ?, ?, ?, ?, ?, ?" +
+      "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
+      "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?" +
       ")";
 
     try (
@@ -207,8 +220,21 @@ public abstract class TeradataPluginTestBase extends DatabasePluginTestBase {
         pStmt.setBigDecimal(16, new BigDecimal(54.65).add(new BigDecimal(i)));
         pStmt.setTime(17, new Time(CURRENT_TS));
         pStmt.setTimestamp(18, new Timestamp(CURRENT_TS));
-//        pStmt.setTime(17, new Time(CURRENT_TS));
-//        pStmt.setTimestamp(18, new Timestamp(CURRENT_TS));
+        pStmt.setTime(19, new Time(CURRENT_TS));
+        pStmt.setTimestamp(20, new Timestamp(CURRENT_TS));
+        pStmt.setString(21, "2019");
+        pStmt.setString(22, "2019-10");
+        pStmt.setString(23, "10");
+        pStmt.setString(24, "11");
+        pStmt.setString(25, "11 12");
+        pStmt.setString(26, "11 12:13");
+        pStmt.setString(27, "11 12:13:14.567");
+        pStmt.setString(28, "12");
+        pStmt.setString(29, "12:13");
+        pStmt.setString(30, "12:13:14.567");
+        pStmt.setString(31, "13");
+        pStmt.setString(32, "13:14.567");
+        pStmt.setString(33, "14.567");
         pStmt.executeUpdate();
       }
     }

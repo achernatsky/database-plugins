@@ -18,7 +18,10 @@ package io.cdap.plugin.teradata.sink;
 
 import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.plugin.db.batch.sink.CommonFieldsValidator;
+import io.cdap.plugin.teradata.TeradataSchemaReader;
 
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Types;
 
 /**
@@ -27,12 +30,24 @@ import java.sql.Types;
 public class TeradataFieldsValidator extends CommonFieldsValidator {
 
   @Override
-  public boolean isFieldCompatible(Schema.Type fieldType, Schema.LogicalType fieldLogicalType, int sqlType) {
+  public boolean isFieldCompatible(Schema.Field field, ResultSetMetaData metadata, int index) throws SQLException {
+    Schema fieldSchema = field.getSchema().isNullable() ? field.getSchema().getNonNullable() : field.getSchema();
+    Schema.Type fieldType = fieldSchema.getType();
+    Schema.LogicalType fieldLogicalType = fieldSchema.getLogicalType();
+
+    int sqlType = metadata.getColumnType(index);
+    String sqlTypeName = metadata.getColumnTypeName(index);
+
     // In Teradata FLOAT and DOUBLE are same types
     if (fieldType == Schema.Type.DOUBLE && sqlType == Types.FLOAT) {
       return true;
     }
 
-    return super.isFieldCompatible(fieldType, fieldLogicalType, sqlType);
+    // Teradata interval types are mapping to String
+    if (fieldType == Schema.Type.STRING && TeradataSchemaReader.TERADATA_STRING_TYPES.contains(sqlTypeName)) {
+      return true;
+    }
+
+    return isFieldCompatible(fieldType, fieldLogicalType, sqlType);
   }
 }

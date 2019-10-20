@@ -16,20 +16,45 @@
 
 package io.cdap.plugin.teradata;
 
+import com.google.common.collect.ImmutableSet;
 import io.cdap.cdap.api.data.schema.Schema;
 import io.cdap.plugin.db.CommonSchemaReader;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Set;
 
 /**
  * Teradata schema reader.
  */
 public class TeradataSchemaReader extends CommonSchemaReader {
+  public static final Set<String> TERADATA_STRING_TYPES = ImmutableSet.of(
+    "INTERVAL YEAR",
+    "INTERVAL YEAR TO MONTH",
+    "INTERVAL MONTH",
+    "INTERVAL DAY",
+    "INTERVAL DAY TO HOUR",
+    "INTERVAL DAY TO MINUTE",
+    "INTERVAL DAY TO SECOND",
+    "INTERVAL HOUR",
+    "INTERVAL HOUR TO MINUTE",
+    "INTERVAL HOUR TO SECOND",
+    "INTERVAL MINUTE",
+    "INTERVAL MINUTE TO SECOND",
+    "INTERVAL SECOND"
+  );
+
   @Override
   public Schema getSchema(ResultSetMetaData metadata, int index) throws SQLException {
     int sqlType = metadata.getColumnType(index);
+    String sqlTypeName = metadata.getColumnTypeName(index);
+
+    // Teradata interval types are mapping to String
+    if(TERADATA_STRING_TYPES.contains(sqlTypeName)) {
+      return Schema.of(Schema.Type.STRING);
+    }
+
     switch (sqlType) {
       // In Teradata FLOAT and DOUBLE are same types
       case Types.FLOAT:

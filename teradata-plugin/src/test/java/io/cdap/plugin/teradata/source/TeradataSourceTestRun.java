@@ -105,7 +105,22 @@ public class TeradataSourceTestRun extends TeradataPluginTestBase {
       "DECIMAL_COL, " +
       "NUMBER_COL, " +
       "TIME_COL, " +
-      "TIMESTAMP_COL " +
+      "TIMESTAMP_COL, " +
+      "TIMETZ_COL, " +
+      "TIMESTAMPTZ_COL, " +
+      "INTERVAL_YEAR_COL, " +
+      "INTERVAL_YEAR_TO_MONTH_COL, " +
+      "INTERVAL_MONTH_COL, " +
+      "INTERVAL_DAY_COL, " +
+      "INTERVAL_DAY_TO_HOUR_COL, " +
+      "INTERVAL_DAY_TO_MINUTE_COL, " +
+      "INTERVAL_DAY_TO_SECOND_COL, " +
+      "INTERVAL_HOUR_COL, " +
+      "INTERVAL_HOUR_TO_MINUTE_COL, " +
+      "INTERVAL_HOUR_TO_SECOND_COL, " +
+      "INTERVAL_MINUTE_COL, " +
+      "INTERVAL_MINUTE_TO_SECOND_COL, " +
+      "INTERVAL_SECOND_COL " +
       "FROM my_table WHERE ID < 3 AND $CONDITIONS";
     String boundingQuery = "SELECT MIN(ID),MAX(ID) from my_table";
     String splitBy = "ID";
@@ -147,6 +162,34 @@ public class TeradataSourceTestRun extends TeradataPluginTestBase {
     Assert.assertEquals("user1", row1.get("CLOB_COL"));
     Assert.assertEquals("user2", row2.get("CLOB_COL"));
 
+    // Verify interval columns
+    Assert.assertEquals("2019", row1.get("INTERVAL_YEAR_COL").toString().trim());
+    Assert.assertEquals("2019", row2.get("INTERVAL_YEAR_COL").toString().trim());
+    Assert.assertEquals("2019-10", row1.get("INTERVAL_YEAR_TO_MONTH_COL").toString().trim());
+    Assert.assertEquals("2019-10", row2.get("INTERVAL_YEAR_TO_MONTH_COL").toString().trim());
+    Assert.assertEquals("10", row1.get("INTERVAL_MONTH_COL").toString().trim());
+    Assert.assertEquals("10", row2.get("INTERVAL_MONTH_COL").toString().trim());
+    Assert.assertEquals("11", row1.get("INTERVAL_DAY_COL").toString().trim());
+    Assert.assertEquals("11", row2.get("INTERVAL_DAY_COL").toString().trim());
+    Assert.assertEquals("11 12", row1.get("INTERVAL_DAY_TO_HOUR_COL").toString().trim());
+    Assert.assertEquals("11 12", row2.get("INTERVAL_DAY_TO_HOUR_COL").toString().trim());
+    Assert.assertEquals("11 12:13", row1.get("INTERVAL_DAY_TO_MINUTE_COL").toString().trim());
+    Assert.assertEquals("11 12:13", row2.get("INTERVAL_DAY_TO_MINUTE_COL").toString().trim());
+    Assert.assertEquals("11 12:13:14.567", row1.get("INTERVAL_DAY_TO_SECOND_COL").toString().trim());
+    Assert.assertEquals("11 12:13:14.567", row2.get("INTERVAL_DAY_TO_SECOND_COL").toString().trim());
+    Assert.assertEquals("12", row1.get("INTERVAL_HOUR_COL").toString().trim());
+    Assert.assertEquals("12", row2.get("INTERVAL_HOUR_COL").toString().trim());
+    Assert.assertEquals("12:13", row1.get("INTERVAL_HOUR_TO_MINUTE_COL").toString().trim());
+    Assert.assertEquals("12:13", row2.get("INTERVAL_HOUR_TO_MINUTE_COL").toString().trim());
+    Assert.assertEquals("12:13:14.567", row1.get("INTERVAL_HOUR_TO_SECOND_COL").toString().trim());
+    Assert.assertEquals("12:13:14.567", row2.get("INTERVAL_HOUR_TO_SECOND_COL").toString().trim());
+    Assert.assertEquals("13", row1.get("INTERVAL_MINUTE_COL").toString().trim());
+    Assert.assertEquals("13", row2.get("INTERVAL_MINUTE_COL").toString().trim());
+    Assert.assertEquals("13:14.567", row1.get("INTERVAL_MINUTE_TO_SECOND_COL").toString().trim());
+    Assert.assertEquals("13:14.567", row2.get("INTERVAL_MINUTE_TO_SECOND_COL").toString().trim());
+    Assert.assertEquals("14.567", row1.get("INTERVAL_SECOND_COL").toString().trim());
+    Assert.assertEquals("14.567", row2.get("INTERVAL_SECOND_COL").toString().trim());
+
     // Verify numeric columns
     Assert.assertEquals(0, (int) row1.get("GRADUATED"));
     Assert.assertEquals(1, (int) row2.get("GRADUATED"));
@@ -177,6 +220,8 @@ public class TeradataSourceTestRun extends TeradataPluginTestBase {
     Assert.assertEquals(expectedDate, row1.getDate("DATE_COL"));
     Assert.assertEquals(expectedTime, row1.getTime("TIME_COL"));
     Assert.assertEquals(expectedTs, row1.getTimestamp("TIMESTAMP_COL", UTC_ZONE));
+    Assert.assertEquals(expectedTime, row1.getTime("TIMETZ_COL"));
+    Assert.assertEquals(expectedTs, row1.getTimestamp("TIMESTAMPTZ_COL", UTC_ZONE));
 
     // verify binary columns
     Assert.assertEquals("user1", Bytes.toString(((ByteBuffer) row1.get("BINARY_COL")).array(), 0, 5));

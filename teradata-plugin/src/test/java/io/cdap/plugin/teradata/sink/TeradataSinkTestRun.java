@@ -61,11 +61,26 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
     Schema.Field.of("DATE_COL", Schema.of(Schema.LogicalType.DATE)),
     Schema.Field.of("TIME_COL", Schema.of(Schema.LogicalType.TIME_MICROS)),
     Schema.Field.of("TIMESTAMP_COL", Schema.of(Schema.LogicalType.TIMESTAMP_MICROS)),
+    Schema.Field.of("TIMETZ_COL", Schema.of(Schema.LogicalType.TIME_MICROS)),
+    Schema.Field.of("TIMESTAMPTZ_COL", Schema.of(Schema.LogicalType.TIMESTAMP_MICROS)),
     Schema.Field.of("CHAR_COL", Schema.of(Schema.Type.STRING)),
     Schema.Field.of("VARCHAR_COL", Schema.of(Schema.Type.STRING)),
     Schema.Field.of("BINARY_COL", Schema.of(Schema.Type.BYTES)),
     Schema.Field.of("VARBINARY_COL", Schema.of(Schema.Type.BYTES)),
-    Schema.Field.of("BLOB_COL", Schema.of(Schema.Type.BYTES))
+    Schema.Field.of("BLOB_COL", Schema.of(Schema.Type.BYTES)),
+    Schema.Field.of("INTERVAL_YEAR_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_YEAR_TO_MONTH_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_MONTH_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_DAY_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_DAY_TO_HOUR_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_DAY_TO_MINUTE_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_DAY_TO_SECOND_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_HOUR_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_HOUR_TO_MINUTE_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_HOUR_TO_SECOND_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_MINUTE_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_MINUTE_TO_SECOND_COL", Schema.of(Schema.Type.STRING)),
+    Schema.Field.of("INTERVAL_SECOND_COL", Schema.of(Schema.Type.STRING))
 //    Schema.Field.of("ENUM_COL", Schema.of(Schema.Type.STRING)),
 //    Schema.Field.of("SET_COL", Schema.of(Schema.Type.STRING))
   );
@@ -147,12 +162,27 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
         CustomAssertions.assertObjectEquals(expected.getDecimal("NUMBER_COL"), actual.getBigDecimal("NUMBER_COL").setScale(SCALE,  RoundingMode.HALF_EVEN));
         CustomAssertions.assertObjectEquals(expected.getDecimal("DECIMAL_COL"), actual.getBigDecimal("DECIMAL_COL"));
 
-//        // Verify binary columns
+        // Verify interval columns
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_YEAR_COL"), actual.getString("INTERVAL_YEAR_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_YEAR_TO_MONTH_COL"), actual.getString("INTERVAL_YEAR_TO_MONTH_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MONTH_COL"), actual.getString("INTERVAL_MONTH_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_COL"), actual.getString("INTERVAL_DAY_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_HOUR_COL"), actual.getString("INTERVAL_DAY_TO_HOUR_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_MINUTE_COL"), actual.getString("INTERVAL_DAY_TO_MINUTE_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_SECOND_COL"), actual.getString("INTERVAL_DAY_TO_SECOND_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_COL"), actual.getString("INTERVAL_HOUR_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_TO_MINUTE_COL"), actual.getString("INTERVAL_HOUR_TO_MINUTE_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_TO_SECOND_COL"), actual.getString("INTERVAL_HOUR_TO_SECOND_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MINUTE_COL"), actual.getString("INTERVAL_MINUTE_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MINUTE_TO_SECOND_COL"), actual.getString("INTERVAL_MINUTE_TO_SECOND_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_SECOND_COL"), actual.getString("INTERVAL_SECOND_COL").trim());
+
+        // Verify binary columns
         Assert.assertArrayEquals(expected.get("BINARY_COL"), actual.getBytes("BINARY_COL"));
         Assert.assertArrayEquals(expected.get("VARBINARY_COL"), actual.getBytes("VARBINARY_COL"));
         Assert.assertArrayEquals(expected.get("BLOB_COL"), actual.getBytes("BLOB_COL"));
 
-//        // Verify time columns
+        // Verify time columns
         Assert.assertEquals(expected.getDate("DATE_COL"), actual.getDate("DATE_COL").toLocalDate());
 
         // compare seconds, since mysql 'time' type does not store milliseconds but 'LocalTime' does
@@ -160,6 +190,10 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
                             actual.getTime("TIME_COL").toLocalTime().toSecondOfDay());
         Assert.assertEquals(expected.getTimestamp("TIMESTAMP_COL"),
                             actual.getTimestamp("TIMESTAMP_COL").toInstant().atZone(UTC_ZONE));
+        Assert.assertEquals(expected.getTime("TIMETZ_COL").toSecondOfDay(),
+                            actual.getTime("TIMETZ_COL").toLocalTime().toSecondOfDay());
+        Assert.assertEquals(expected.getTimestamp("TIMESTAMPTZ_COL"),
+                            actual.getTimestamp("TIMESTAMPTZ_COL").toInstant().atZone(UTC_ZONE));
       }
     }
   }
@@ -181,11 +215,26 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
         .setDate("DATE_COL", localDateTime.toLocalDate())
         .setTime("TIME_COL", localDateTime.toLocalTime())
         .setTimestamp("TIMESTAMP_COL", localDateTime.atZone(UTC_ZONE))
+        .setTime("TIMETZ_COL", localDateTime.toLocalTime())
+        .setTimestamp("TIMESTAMPTZ_COL", localDateTime.atZone(UTC_ZONE))
         .set("CHAR_COL", "char" + i)
         .set("VARCHAR_COL", "char" + i)
         .set("BINARY_COL", name.getBytes(Charsets.UTF_8))
         .set("VARBINARY_COL", name.getBytes(Charsets.UTF_8))
-        .set("BLOB_COL", name.getBytes(Charsets.UTF_8));
+        .set("BLOB_COL", name.getBytes(Charsets.UTF_8))
+        .set("INTERVAL_YEAR_COL", "2019")
+        .set("INTERVAL_YEAR_TO_MONTH_COL", "2019-10")
+        .set("INTERVAL_MONTH_COL", "10")
+        .set("INTERVAL_DAY_COL", "11")
+        .set("INTERVAL_DAY_TO_HOUR_COL", "11 12")
+        .set("INTERVAL_DAY_TO_MINUTE_COL", "11 12:13")
+        .set("INTERVAL_DAY_TO_SECOND_COL", "11 12:13:14.567")
+        .set("INTERVAL_HOUR_COL", "12")
+        .set("INTERVAL_HOUR_TO_MINUTE_COL", "12:13")
+        .set("INTERVAL_HOUR_TO_SECOND_COL", "12:13:14.567")
+        .set("INTERVAL_MINUTE_COL", "13")
+        .set("INTERVAL_MINUTE_TO_SECOND_COL", "13:14.567")
+        .set("INTERVAL_SECOND_COL", "14.567");
 //        .set("ENUM_COL", "Second")
 //        .set("SET_COL", "a,b,c,d");
 
