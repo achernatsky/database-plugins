@@ -51,16 +51,15 @@ public class TeradataSchemaReader extends CommonSchemaReader {
     String sqlTypeName = metadata.getColumnTypeName(index);
 
     // Teradata interval types are mapping to String
-    if(TERADATA_STRING_TYPES.contains(sqlTypeName)) {
+    if (TERADATA_STRING_TYPES.contains(sqlTypeName)) {
       return Schema.of(Schema.Type.STRING);
     }
 
-    switch (sqlType) {
-      // In Teradata FLOAT and DOUBLE are same types
-      case Types.FLOAT:
-        return Schema.of(Schema.Type.DOUBLE);
-      default:
-        return super.getSchema(metadata, index);
+    // In Teradata FLOAT and DOUBLE are same types
+    if (sqlType == Types.FLOAT) {
+      return Schema.of(Schema.Type.DOUBLE);
     }
+
+    return super.getSchema(metadata, index);
   }
 }

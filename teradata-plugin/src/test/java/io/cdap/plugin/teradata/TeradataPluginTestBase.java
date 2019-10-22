@@ -80,7 +80,7 @@ public abstract class TeradataPluginTestBase extends DatabasePluginTestBase {
   }
 
   protected static final Map<String, String> BASE_PROPS = ImmutableMap.<String, String>builder()
-    .put(ConnectionConfig.HOST, System.getProperty("teradata.host", "10.2.15.180"))
+    .put(ConnectionConfig.HOST, System.getProperty("teradata.host", "localhost"))
     .put(ConnectionConfig.PORT, System.getProperty("teradata.port", "1025"))
     .put(ConnectionConfig.DATABASE, System.getProperty("teradata.database", "mydb"))
     .put(ConnectionConfig.USER, System.getProperty("teradata.username", "test"))
@@ -117,11 +117,11 @@ public abstract class TeradataPluginTestBase extends DatabasePluginTestBase {
 
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
-    connectionUrl = String.format(
-      TeradataConstants.TERADATA_CONNECTION_STRING_FORMAT,
+    connectionUrl = TeradataUtils.getConnectionString(
       BASE_PROPS.get(ConnectionConfig.HOST),
+      Integer.parseInt(BASE_PROPS.get(ConnectionConfig.PORT)),
       BASE_PROPS.get(ConnectionConfig.DATABASE),
-      BASE_PROPS.get(ConnectionConfig.PORT)
+      ""
     );
     Connection conn = createConnection();
 

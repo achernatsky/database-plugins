@@ -21,5 +21,5 @@ package io.cdap.plugin.teradata;
  */
 public final class TeradataConstants {
   public static final String PLUGIN_NAME = "Teradata";
-  public static final String TERADATA_CONNECTION_STRING_FORMAT = "jdbc:teradata://%s/DATABASE=%s,DBS_PORT=%s";
+  public static final String TERADATA_CONNECTION_STRING_FORMAT = "jdbc:teradata://%s/DATABASE=%s,DBS_PORT=%s%s";
 }

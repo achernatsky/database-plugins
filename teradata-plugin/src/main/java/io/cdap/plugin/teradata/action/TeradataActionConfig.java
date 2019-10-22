@@ -17,7 +17,7 @@
 package io.cdap.plugin.teradata.action;
 
 import io.cdap.plugin.db.batch.config.DBSpecificQueryConfig;
-import io.cdap.plugin.teradata.TeradataConstants;
+import io.cdap.plugin.teradata.TeradataUtils;
 
 /**
  * Teradata Action Config.
@@ -26,6 +26,6 @@ public class TeradataActionConfig extends DBSpecificQueryConfig {
 
   @Override
   public String getConnectionString() {
-    return String.format(TeradataConstants.TERADATA_CONNECTION_STRING_FORMAT, host, database, port);
+    return TeradataUtils.getConnectionString(host, port, database, connectionArguments);
   }
 }

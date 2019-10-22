@@ -17,7 +17,7 @@
 package io.cdap.plugin.teradata.postaction;
 
 import io.cdap.plugin.db.batch.config.DBSpecificQueryActionConfig;
-import io.cdap.plugin.teradata.TeradataConstants;
+import io.cdap.plugin.teradata.TeradataUtils;
 
 /**
  * Teradata post action configuration.
@@ -26,6 +26,6 @@ public class TeradataPostActionConfig extends DBSpecificQueryActionConfig {
 
   @Override
   public String getConnectionString() {
-    return String.format(TeradataConstants.TERADATA_CONNECTION_STRING_FORMAT, host, database, port);
+    return TeradataUtils.getConnectionString(host, port, database, connectionArguments);
   }
 }

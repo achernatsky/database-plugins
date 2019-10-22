@@ -17,14 +17,15 @@
 package io.cdap.plugin.teradata.source;
 
 import io.cdap.plugin.db.batch.config.DBSpecificSourceConfig;
-import io.cdap.plugin.teradata.TeradataConstants;
+import io.cdap.plugin.teradata.TeradataUtils;
 
 /**
  * Teradata source config.
  */
 public class TeradataSourceConfig extends DBSpecificSourceConfig {
+
   @Override
   public String getConnectionString() {
-    return String.format(TeradataConstants.TERADATA_CONNECTION_STRING_FORMAT, host, database, port);
+    return TeradataUtils.getConnectionString(host, port, database, connectionArguments);
   }
 }

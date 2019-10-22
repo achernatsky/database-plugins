@@ -81,8 +81,6 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
     Schema.Field.of("INTERVAL_MINUTE_COL", Schema.of(Schema.Type.STRING)),
     Schema.Field.of("INTERVAL_MINUTE_TO_SECOND_COL", Schema.of(Schema.Type.STRING)),
     Schema.Field.of("INTERVAL_SECOND_COL", Schema.of(Schema.Type.STRING))
-//    Schema.Field.of("ENUM_COL", Schema.of(Schema.Type.STRING)),
-//    Schema.Field.of("SET_COL", Schema.of(Schema.Type.STRING))
   );
 
   @Before
@@ -151,31 +149,46 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
         CustomAssertions.assertObjectEquals(expected.get("ID"), actual.getInt("ID"));
         CustomAssertions.assertObjectEquals(expected.get("NAME"), actual.getString("NAME"));
         CustomAssertions.assertObjectEquals(expected.get("CHAR_COL"), actual.getString("CHAR_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("VARCHAR_COL"), actual.getString("VARCHAR_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("VARCHAR_COL"),
+                                            actual.getString("VARCHAR_COL").trim());
         CustomAssertions.assertObjectEquals(expected.get("GRADUATED"), actual.getInt("GRADUATED"));
         Assert.assertNull(actual.getString("NOT_IMPORTED"));
-//        CustomAssertions.assertObjectEquals(expected.get("ENUM_COL"), actual.getString("ENUM_COL"));
-//        CustomAssertions.assertObjectEquals(expected.get("SET_COL"), actual.getString("SET_COL"));
         CustomAssertions.assertObjectEquals(expected.get("SMALL"), actual.getInt("SMALL"));
         CustomAssertions.assertObjectEquals(expected.get("BIG"), actual.getLong("BIG"));
         CustomAssertions.assertNumericEquals(expected.get("SCORE"), actual.getDouble("SCORE"));
-        CustomAssertions.assertObjectEquals(expected.getDecimal("NUMBER_COL"), actual.getBigDecimal("NUMBER_COL").setScale(SCALE,  RoundingMode.HALF_EVEN));
-        CustomAssertions.assertObjectEquals(expected.getDecimal("DECIMAL_COL"), actual.getBigDecimal("DECIMAL_COL"));
+        CustomAssertions.assertObjectEquals(expected.getDecimal("NUMBER_COL"),
+                                            actual.getBigDecimal("NUMBER_COL")
+                                              .setScale(SCALE, RoundingMode.HALF_EVEN));
+        CustomAssertions.assertObjectEquals(expected.getDecimal("DECIMAL_COL"),
+                                            actual.getBigDecimal("DECIMAL_COL"));
 
         // Verify interval columns
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_YEAR_COL"), actual.getString("INTERVAL_YEAR_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_YEAR_TO_MONTH_COL"), actual.getString("INTERVAL_YEAR_TO_MONTH_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MONTH_COL"), actual.getString("INTERVAL_MONTH_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_COL"), actual.getString("INTERVAL_DAY_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_HOUR_COL"), actual.getString("INTERVAL_DAY_TO_HOUR_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_MINUTE_COL"), actual.getString("INTERVAL_DAY_TO_MINUTE_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_SECOND_COL"), actual.getString("INTERVAL_DAY_TO_SECOND_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_COL"), actual.getString("INTERVAL_HOUR_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_TO_MINUTE_COL"), actual.getString("INTERVAL_HOUR_TO_MINUTE_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_TO_SECOND_COL"), actual.getString("INTERVAL_HOUR_TO_SECOND_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MINUTE_COL"), actual.getString("INTERVAL_MINUTE_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MINUTE_TO_SECOND_COL"), actual.getString("INTERVAL_MINUTE_TO_SECOND_COL").trim());
-        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_SECOND_COL"), actual.getString("INTERVAL_SECOND_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_YEAR_COL"),
+                                            actual.getString("INTERVAL_YEAR_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_YEAR_TO_MONTH_COL"),
+                                            actual.getString("INTERVAL_YEAR_TO_MONTH_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MONTH_COL"),
+                                            actual.getString("INTERVAL_MONTH_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_COL"),
+                                            actual.getString("INTERVAL_DAY_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_HOUR_COL"),
+                                            actual.getString("INTERVAL_DAY_TO_HOUR_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_MINUTE_COL"),
+                                            actual.getString("INTERVAL_DAY_TO_MINUTE_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_DAY_TO_SECOND_COL"),
+                                            actual.getString("INTERVAL_DAY_TO_SECOND_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_COL"),
+                                            actual.getString("INTERVAL_HOUR_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_TO_MINUTE_COL"),
+                                            actual.getString("INTERVAL_HOUR_TO_MINUTE_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_HOUR_TO_SECOND_COL"),
+                                            actual.getString("INTERVAL_HOUR_TO_SECOND_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MINUTE_COL"),
+                                            actual.getString("INTERVAL_MINUTE_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_MINUTE_TO_SECOND_COL"),
+                                            actual.getString("INTERVAL_MINUTE_TO_SECOND_COL").trim());
+        CustomAssertions.assertObjectEquals(expected.get("INTERVAL_SECOND_COL"),
+                                            actual.getString("INTERVAL_SECOND_COL").trim());
 
         // Verify binary columns
         Assert.assertArrayEquals(expected.get("BINARY_COL"), actual.getBytes("BINARY_COL"));
@@ -183,7 +196,8 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
         Assert.assertArrayEquals(expected.get("BLOB_COL"), actual.getBytes("BLOB_COL"));
 
         // Verify time columns
-        Assert.assertEquals(expected.getDate("DATE_COL"), actual.getDate("DATE_COL").toLocalDate());
+        Assert.assertEquals(expected.getDate("DATE_COL"),
+                            actual.getDate("DATE_COL").toLocalDate());
 
         // compare seconds, since mysql 'time' type does not store milliseconds but 'LocalTime' does
         Assert.assertEquals(expected.getTime("TIME_COL").toSecondOfDay(),
@@ -235,8 +249,6 @@ public class TeradataSinkTestRun extends TeradataPluginTestBase {
         .set("INTERVAL_MINUTE_COL", "13")
         .set("INTERVAL_MINUTE_TO_SECOND_COL", "13:14.567")
         .set("INTERVAL_SECOND_COL", "14.567");
-//        .set("ENUM_COL", "Second")
-//        .set("SET_COL", "a,b,c,d");
 
       inputRecords.add(builder.build());
     }

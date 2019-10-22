@@ -17,7 +17,7 @@
 package io.cdap.plugin.teradata.sink;
 
 import io.cdap.plugin.db.batch.config.DBSpecificSinkConfig;
-import io.cdap.plugin.teradata.TeradataConstants;
+import io.cdap.plugin.teradata.TeradataUtils;
 
 /**
  * Teradata sink config.
@@ -26,6 +26,6 @@ public class TeradataSinkConfig extends DBSpecificSinkConfig {
 
   @Override
   public String getConnectionString() {
-    return String.format(TeradataConstants.TERADATA_CONNECTION_STRING_FORMAT, host, database, port);
+    return TeradataUtils.getConnectionString(host, port, database, connectionArguments);
   }
 }
